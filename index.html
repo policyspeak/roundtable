@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolicySpeak Roundtable — Quick Survey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      color: #5d5d5d;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .logo { margin-bottom: 2rem; }
+    .logo svg { height: 40px; width: auto; }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      max-width: 560px;
+      width: 100%;
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2f4f4f;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #7a7a7a;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #2f4f4f;
+      margin-bottom: 0.375rem;
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: #9a9a9a;
+      font-size: 0.8rem;
+    }
+
+    label .hint {
+      display: block;
+      font-weight: 400;
+      color: #7a7a7a;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid #d4d4d4;
+      border-radius: 8px;
+      background: #f9f9f9;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: #333;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      margin-bottom: 1.25rem;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #2f4f4f;
+      box-shadow: 0 0 0 3px rgba(47,79,79,0.1);
+      background: #fff;
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* Multi-input groups */
+    .multi-group { margin-bottom: 1.25rem; }
+    .multi-group label { margin-bottom: 0.625rem; }
+
+    .input-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-row .row-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #9a9a9a;
+    }
+
+    .input-row input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .input-row .remove-row {
+      flex-shrink: 0;
+      width: 28px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+      padding: 0;
+    }
+
+    .input-row .remove-row:hover { color: #c03030; background: #fff0f0; }
+
+    .add-row-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: 32px;
+      padding: 0.25rem 0.5rem;
+      background: none;
+      border: 1px dashed #d4d4d4;
+      border-radius: 6px;
+      color: #7a7a7a;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .add-row-btn:hover { border-color: #2f4f4f; color: #2f4f4f; }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.75rem;
+      background: #ff7f7f;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button[type="submit"]:hover { background: #e86e6e; }
+    button[type="submit"]:active { transform: scale(0.99); }
+    button[type="submit"]:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #9a9a9a;
+    }
+
+    /* Success state */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .success-message .check {
+      width: 56px;
+      height: 56px;
+      background: #2f4f4f;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .success-message .check svg { width: 28px; height: 28px; }
+
+    .success-message h2 {
+      font-size: 1.25rem;
+      color: #2f4f4f;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message p {
+      color: #7a7a7a;
+      line-height: 1.5;
+    }
+
+    /* Error banner */
+    .error-banner {
+      display: none;
+      background: #fff0f0;
+      border: 1px solid #ffcccc;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+      color: #c03030;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Inline SVG logo -->
+  <div class="logo">
+    <svg width="489" height="88" viewBox="0 0 489 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M207.689 8C223.153 8 235.689 -4.53603 235.689 -20C235.689 -35.464 223.153 -48 207.689 -48C192.225 -48 179.689 -35.464 179.689 -20C179.689 -4.53603 192.225 8 207.689 8Z" fill="url(#paint0_radial_logo)"/>
+      <path d="M0 66V61.68L12.288 60.432H15.648L28.032 61.68V66H0ZM6.912 66C7.04 61.584 7.104 57.104 7.104 52.56C7.168 47.952 7.2 43.312 7.2 38.64V35.088C7.2 30.544 7.168 25.968 7.104 21.36C7.104 16.752 7.04 12.176 6.912 7.63199H20.16C20.032 12.112 19.936 16.656 19.872 21.264C19.872 25.808 19.872 30.416 19.872 35.088V40.464C19.872 44.368 19.872 48.464 19.872 52.752C19.936 57.04 20.032 61.456 20.16 66H6.912ZM13.536 43.44V38.832H23.52C27.936 38.832 31.168 37.584 33.216 35.088C35.328 32.528 36.384 29.232 36.384 25.2C36.384 16.688 32 12.432 23.232 12.432H13.536V7.63199H23.904C32.48 7.63199 38.72 9.23199 42.624 12.432C46.528 15.632 48.48 19.888 48.48 25.2C48.48 28.464 47.648 31.504 45.984 34.32C44.384 37.072 41.728 39.28 38.016 40.944C34.368 42.608 29.408 43.44 23.136 43.44H13.536ZM0 11.952V7.63199H13.536V13.296H12.288L0 11.952Z" fill="#2F4F4F"/>
+      <path d="M74.7517 67.152C70.5917 67.152 66.8477 66.256 63.5197 64.464C60.2557 62.672 57.6957 60.112 55.8397 56.784C53.9837 53.392 53.0558 49.392 53.0558 44.784C53.0558 40.112 54.0477 36.112 56.0317 32.784C58.0157 29.456 60.6398 26.896 63.9038 25.104C67.2318 23.248 70.8477 22.32 74.7517 22.32C78.6557 22.32 82.2398 23.216 85.5038 25.008C88.8318 26.8 91.4877 29.36 93.4717 32.688C95.4557 36.016 96.4478 40.048 96.4478 44.784C96.4478 49.456 95.5197 53.456 93.6637 56.784C91.8077 60.112 89.2477 62.672 85.9837 64.464C82.7197 66.256 78.9757 67.152 74.7517 67.152ZM74.7517 62.832C77.6317 62.832 79.8397 61.392 81.3757 58.512C82.9117 55.568 83.6797 51.056 83.6797 44.976C83.6797 38.768 82.9117 34.192 81.3757 31.248C79.8397 28.24 77.6317 26.736 74.7517 26.736C71.8077 26.736 69.5678 28.24 68.0318 31.248C66.5598 34.192 65.8238 38.768 65.8238 44.976C65.8238 51.056 66.5598 55.568 68.0318 58.512C69.5678 61.392 71.8077 62.832 74.7517 62.832Z" fill="#2F4F4F"/>
+      <path d="M101.694 66V62.256L110.622 60.528H115.806L125.118 62.256V66H101.694ZM107.166 66C107.358 59.856 107.454 53.68 107.454 47.472V9.83999L101.406 8.97599V5.42399L118.302 1.48799L119.742 2.35199L119.358 14.736V47.472C119.358 53.68 119.454 59.856 119.646 66H107.166Z" fill="#2F4F4F"/>
+      <path d="M129.924 66V62.256L138.564 60.528H143.748L152.484 62.256V66H129.924ZM135.204 66C135.268 64.656 135.3 62.896 135.3 60.72C135.364 58.48 135.396 56.176 135.396 53.808C135.46 51.376 135.492 49.264 135.492 47.472V43.344C135.492 40.912 135.46 38.896 135.396 37.296C135.396 35.696 135.332 34 135.204 32.208L129.252 31.44V27.984L146.052 22.32L147.492 23.184L147.204 35.856V47.472C147.204 49.264 147.204 51.376 147.204 53.808C147.268 56.176 147.3 58.48 147.3 60.72C147.364 62.896 147.428 64.656 147.492 66H135.204Z" fill="#2F4F4F"/>
+      <path d="M178.803 67.152C174.771 67.152 171.155 66.32 167.955 64.656C164.755 62.928 162.195 60.432 160.275 57.168C158.419 53.84 157.491 49.776 157.491 44.976C157.491 40.176 158.515 36.112 160.563 32.784C162.675 29.392 165.427 26.8 168.819 25.008C172.275 23.216 176.051 22.32 180.147 22.32C183.091 22.32 185.715 22.896 188.019 24.048C190.387 25.136 192.307 26.64 193.779 28.56C195.251 30.416 196.115 32.496 196.371 34.8C195.539 37.552 193.747 38.928 190.995 38.928C189.395 38.928 188.051 38.384 186.963 37.296C185.875 36.208 185.203 34.416 184.947 31.92L183.603 25.2L189.363 28.656C186.611 27.312 183.891 26.64 181.203 26.64C179.283 26.64 177.459 27.248 175.731 28.464C174.003 29.616 172.595 31.44 171.507 33.936C170.419 36.432 169.875 39.664 169.875 43.632C169.875 48.816 171.059 52.816 173.427 55.632C175.795 58.384 178.931 59.76 182.835 59.76C185.075 59.76 187.091 59.28 188.883 58.32C190.739 57.296 192.275 55.952 193.491 54.288L196.275 56.496C194.739 60.08 192.467 62.768 189.459 64.56C186.515 66.288 182.963 67.152 178.803 67.152Z" fill="#2F4F4F"/>
+      <path d="M207.88 87.216C205.576 87.216 203.561 86.608 201.833 85.392C200.105 84.176 199.176 82.64 199.048 80.784C199.368 79.12 200.169 77.872 201.449 77.04C202.793 76.208 204.265 75.792 205.865 75.792C207.017 75.792 208.201 76.016 209.417 76.464C210.697 76.976 211.945 78.032 213.161 79.632L215.848 83.28L212.488 84.816L209.896 83.28C212.264 81.872 214.312 79.952 216.04 77.52C217.832 75.088 219.24 72.336 220.264 69.264L224.393 57.936L236.585 23.664H242.057L224.872 68.208C222.44 74.608 219.976 79.376 217.48 82.512C214.984 85.648 211.784 87.216 207.88 87.216ZM221.417 71.28L201.544 23.664H214.505L226.409 56.112L226.984 57.936L221.417 71.28ZM199.048 27.312V23.664H222.76V27.312L214.025 28.56H207.208L199.048 27.312ZM228.424 27.312V23.664H245.32V27.312L238.217 28.56H236.488L228.424 27.312Z" fill="#2F4F4F"/>
+      <path d="M267.245 67.536C263.917 67.536 260.588 67.152 257.26 66.384C253.932 65.616 251.085 64.464 248.717 62.928L249.197 50.064H256.492L258.797 64.176L252.268 61.872V57.648C255.084 59.248 257.517 60.496 259.565 61.392C261.677 62.224 264.172 62.64 267.052 62.64C270.572 62.64 273.292 61.808 275.212 60.144C277.132 58.416 278.092 56.176 278.092 53.424C278.092 50.928 277.389 48.976 275.98 47.568C274.636 46.16 272.461 44.848 269.453 43.632L265.708 42C260.78 39.824 256.877 37.296 253.997 34.416C251.181 31.536 249.773 27.728 249.773 22.992C249.773 17.68 251.724 13.552 255.628 10.608C259.532 7.59999 264.652 6.09599 270.988 6.09599C274.124 6.09599 277.068 6.512 279.82 7.344C282.572 8.11199 284.973 9.23199 287.021 10.704L286.349 22.8H279.052L276.845 9.45599L283.469 12.048V16.464C281.165 14.672 279.085 13.328 277.229 12.432C275.373 11.536 273.292 11.088 270.988 11.088C268.236 11.088 265.868 11.856 263.884 13.392C261.964 14.928 261.004 17.04 261.004 19.728C261.004 22.224 261.74 24.24 263.212 25.776C264.748 27.248 266.892 28.592 269.645 29.808L273.581 31.536C279.277 33.968 283.372 36.592 285.868 39.408C288.365 42.224 289.612 45.808 289.612 50.16C289.612 55.344 287.628 59.536 283.66 62.736C279.756 65.936 274.285 67.536 267.245 67.536Z" fill="#2F4F4F"/>
+      <path d="M295.112 86.352V82.512L304.039 80.784H310.471L319.112 82.512V86.352H295.112ZM300.68 86.352C300.872 79.056 300.967 72.592 300.967 66.96V42.672C300.967 40.24 300.935 38.352 300.871 37.008C300.871 35.6 300.808 34 300.68 32.208L294.728 31.44V27.984L310.28 22.32L311.815 23.184L312.296 30.288L312.776 31.248V58.896L312.487 59.76V66.864C312.487 72.56 312.584 79.056 312.776 86.352H300.68ZM323.911 67.152C320.967 67.152 318.343 66.512 316.039 65.232C313.735 63.952 311.655 61.744 309.799 58.608H307.688L308.456 52.752C310.44 55.312 312.295 57.264 314.023 58.608C315.815 59.952 317.799 60.624 319.975 60.624C322.791 60.624 325.159 59.376 327.079 56.88C328.999 54.32 329.96 50.384 329.96 45.072C329.96 39.696 329.064 35.696 327.272 33.072C325.48 30.448 323.175 29.136 320.359 29.136C318.247 29.136 316.168 29.936 314.12 31.536C312.072 33.136 310.023 34.96 307.975 37.008L307.207 31.152H309.896C314.376 25.264 319.56 22.32 325.448 22.32C328.648 22.32 331.527 23.184 334.087 24.912C336.647 26.64 338.696 29.168 340.232 32.496C341.768 35.76 342.535 39.792 342.535 44.592C342.535 49.264 341.672 53.296 339.944 56.688C338.216 60.016 335.944 62.608 333.128 64.464C330.312 66.256 327.24 67.152 323.911 67.152Z" fill="#2F4F4F"/>
+      <path d="M369.774 67.152C365.614 67.152 361.902 66.288 358.638 64.56C355.438 62.768 352.942 60.24 351.15 56.976C349.358 53.648 348.462 49.68 348.462 45.072C348.462 40.272 349.486 36.176 351.534 32.784C353.646 29.392 356.366 26.8 359.694 25.008C363.086 23.216 366.638 22.32 370.35 22.32C375.79 22.32 380.078 24.016 383.214 27.408C386.414 30.736 388.014 35.088 388.014 40.464C388.014 42.32 387.822 43.888 387.438 45.168H353.55V40.848H371.502C373.614 40.848 375.022 40.432 375.726 39.6C376.43 38.704 376.782 37.392 376.782 35.664C376.782 32.848 376.078 30.64 374.67 29.04C373.326 27.44 371.662 26.64 369.678 26.64C368.27 26.64 366.894 27.184 365.55 28.272C364.206 29.36 363.086 31.152 362.19 33.648C361.358 36.08 360.942 39.44 360.942 43.728C360.942 49.168 362.158 53.2 364.59 55.824C367.022 58.448 370.062 59.76 373.71 59.76C376.206 59.76 378.35 59.28 380.142 58.32C381.934 57.36 383.534 56.112 384.942 54.576L387.63 57.072C384.174 63.792 378.222 67.152 369.774 67.152Z" fill="#2F4F4F"/>
+      <path d="M405.832 67.152C402.44 67.152 399.656 66.224 397.48 64.368C395.304 62.512 394.216 59.76 394.216 56.112C394.216 54.128 394.664 52.336 395.56 50.736C396.456 49.072 398.057 47.536 400.361 46.128C402.729 44.656 406.088 43.216 410.44 41.808C412.296 41.296 414.536 40.688 417.16 39.984C419.848 39.216 422.249 38.608 424.361 38.16V41.712C422.377 42.224 420.265 42.8 418.025 43.44C415.849 44.08 414.121 44.656 412.841 45.168C410.217 46.256 408.329 47.568 407.177 49.104C406.025 50.64 405.448 52.304 405.448 54.096C405.448 56.336 406.025 58 407.177 59.088C408.329 60.112 409.705 60.624 411.305 60.624C412.073 60.624 412.809 60.496 413.513 60.24C414.281 59.984 415.272 59.44 416.488 58.608C417.768 57.776 419.496 56.56 421.672 54.96L422.729 59.856H419.368C417.833 61.456 416.425 62.8 415.145 63.888C413.865 64.976 412.489 65.776 411.017 66.288C409.609 66.864 407.88 67.152 405.832 67.152ZM427.625 67.056C424.809 67.056 422.6 66.32 421 64.848C419.4 63.312 418.472 61.2 418.216 58.512V37.104C418.216 33.008 417.673 30.256 416.585 28.848C415.497 27.376 413.545 26.64 410.729 26.64C409.705 26.64 408.552 26.736 407.272 26.928C405.992 27.12 404.425 27.504 402.569 28.08L407.753 24.816L406.6 31.44C406.472 33.808 405.864 35.568 404.776 36.72C403.688 37.808 402.377 38.352 400.841 38.352C397.833 38.352 396.041 36.976 395.465 34.224C395.913 30.64 397.801 27.76 401.129 25.584C404.457 23.408 409 22.32 414.76 22.32C420.072 22.32 423.912 23.568 426.28 26.064C428.648 28.56 429.832 32.72 429.832 38.544V58.032C429.832 60.336 430.633 61.488 432.233 61.488C433.129 61.488 434.12 60.816 435.208 59.472L437.32 61.2C436.296 63.376 434.984 64.912 433.384 65.808C431.848 66.64 429.929 67.056 427.625 67.056Z" fill="#2F4F4F"/>
+      <path d="M439.569 66V62.256L448.401 60.528H453.585L462.801 62.256V66H439.569ZM445.041 66C445.105 64.528 445.137 62.704 445.137 60.528C445.201 58.288 445.233 56.016 445.233 53.712C445.297 51.344 445.329 49.264 445.329 47.472V9.83999L439.281 8.97599V5.42399L456.177 1.48799L457.617 2.35199L457.233 14.736V47.088C457.233 49.008 457.233 51.184 457.233 53.616C457.297 55.984 457.329 58.288 457.329 60.528C457.393 62.704 457.457 64.528 457.521 66H445.041ZM451.089 54.576V49.2L476.817 23.664H483.249L451.089 54.576ZM472.593 66L460.497 42.864L468.753 35.088L482.865 61.008L488.529 62.256V66H472.593ZM465.105 27.408L465.201 23.664H486.129V27.408L476.337 28.752L474.129 29.04L465.105 27.408Z" fill="#2F4F4F"/>
+      <path d="M141.189 17C145.884 17 149.689 13.1944 149.689 8.5C149.689 3.80558 145.884 0 141.189 0C136.495 0 132.689 3.80558 132.689 8.5C132.689 13.1944 136.495 17 141.189 17Z" fill="#FF7F7F"/>
+      <defs>
+        <radialGradient id="paint0_radial_logo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(2979.69 2752) scale(2800)">
+          <stop stop-color="#FF7F7F" stop-opacity="0.6"/>
+          <stop offset="0.5" stop-color="#FF7F7F" stop-opacity="0.25"/>
+          <stop offset="1" stop-color="#FF7F7F" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="card">
+    <!-- Form -->
+    <form id="surveyForm">
+      <h1>Before we sit down...</h1>
+      <p class="subtitle">
+        Help us make the most of our time on March 6. This takes under 2 minutes.
+      </p>
+
+      <div class="error-banner" id="errorBanner"></div>
+
+      <label for="name">Your name</label>
+      <input type="text" id="name" name="name" required placeholder="e.g. Sarah Dupont">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="you@yourfirm.eu">
+
+      <div class="multi-group" id="painGroup">
+        <label>
+          What manual tasks eat the most of your time?
+          <span class="hint">Think about the work that feels like it should be automated by now — the copy-pasting, the cross-referencing, the formatting. List at least 3.</span>
+        </label>
+        <div class="input-row">
+          <span class="row-num">1.</span>
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Reconciling voting lists against our MEP database">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <div class="input-row">
+          <span class="row-num">2.</span>
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Cross-referencing amendment texts across trilogue rounds">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <div class="input-row">
+          <span class="row-num">3.</span>
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Formatting briefing notes from committee transcripts">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <button type="button" class="add-row-btn" data-group="painGroup">+ Add another</button>
+      </div>
+
+      <div class="multi-group" id="wishlistGroup">
+        <label>
+          If you could have tools built for you, what would they do?
+          <span class="hint">Dream big — we'll figure out the feasibility. List at least 3.</span>
+        </label>
+        <div class="input-row">
+          <span class="row-num">1.</span>
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Highlight exactly what changed between trilogue rounds">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <div class="input-row">
+          <span class="row-num">2.</span>
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Auto-generate MEP scorecards from voting records">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <div class="input-row">
+          <span class="row-num">3.</span>
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Real-time alerts when specific amendments are tabled">
+          <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
+        </div>
+        <button type="button" class="add-row-btn" data-group="wishlistGroup">+ Add another</button>
+      </div>
+
+      <label for="dietary">Dietary preferences or restrictions <span class="optional">(optional)</span></label>
+      <input type="text" id="dietary" name="dietary_preferences" placeholder="e.g. vegetarian, no shellfish">
+
+      <button type="submit" id="submitBtn">Submit</button>
+
+      <div class="form-footer">
+        Your answers shape what we build next.
+      </div>
+    </form>
+
+    <!-- Success -->
+    <div class="success-message" id="successMessage">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2>Thank you!</h2>
+      <p>We've got your answers. See you on March 6.</p>
+    </div>
+  </div>
+
+  <script>
+    // CONFIGURATION — update these after creating Workflow 2
+    const WEBHOOK_URL = 'https://n8n.plat-dev.eu/webhook/rt-survey-f8d3a1b7';
+    const AUTH_HEADER_NAME = 'X-Roundtable-Key';
+    const AUTH_HEADER_VALUE = 'B6C4CFCD-8B25-493F-9D52-9041C3D33A77';
+
+    const form = document.getElementById('surveyForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBanner = document.getElementById('errorBanner');
+    const successMessage = document.getElementById('successMessage');
+
+    // --- Multi-input group logic ---
+    const MIN_ROWS = 3;
+    const MAX_ROWS = 8;
+
+    function renumberRows(group) {
+      const rows = group.querySelectorAll('.input-row');
+      rows.forEach((row, i) => {
+        row.querySelector('.row-num').textContent = (i + 1) + '.';
+        // Only first MIN_ROWS are required
+        const input = row.querySelector('input[type="text"]');
+        input.required = i < MIN_ROWS;
+        // Hide remove button when at minimum
+        row.querySelector('.remove-row').style.visibility = rows.length <= MIN_ROWS ? 'hidden' : 'visible';
+      });
+      // Hide add button at max
+      group.querySelector('.add-row-btn').style.display = rows.length >= MAX_ROWS ? 'none' : '';
+    }
+
+    function addRow(group) {
+      const rows = group.querySelectorAll('.input-row');
+      if (rows.length >= MAX_ROWS) return;
+      const newRow = document.createElement('div');
+      newRow.className = 'input-row';
+      newRow.innerHTML =
+        '<span class="row-num"></span>' +
+        '<input type="text" name="' + rows[0].querySelector('input').name + '" placeholder="Another item...">' +
+        '<button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>';
+      group.querySelector('.add-row-btn').before(newRow);
+      renumberRows(group);
+      newRow.querySelector('input').focus();
+    }
+
+    function removeRow(btn) {
+      const group = btn.closest('.multi-group');
+      const rows = group.querySelectorAll('.input-row');
+      if (rows.length <= MIN_ROWS) return;
+      btn.closest('.input-row').remove();
+      renumberRows(group);
+    }
+
+    // Delegate click events for add/remove
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.add-row-btn')) {
+        const btn = e.target.closest('.add-row-btn');
+        addRow(document.getElementById(btn.dataset.group));
+      }
+      if (e.target.closest('.remove-row')) {
+        removeRow(e.target.closest('.remove-row'));
+      }
+    });
+
+    // Initialize row states
+    document.querySelectorAll('.multi-group').forEach(renumberRows);
+
+    // Collect non-empty values from a multi-group
+    function collectGroup(groupId) {
+      const inputs = document.getElementById(groupId).querySelectorAll('input[type="text"]');
+      return Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBanner.style.display = 'none';
+
+      // Validate minimum 3 entries per group
+      const pains = collectGroup('painGroup');
+      const wishes = collectGroup('wishlistGroup');
+      if (pains.length < MIN_ROWS) {
+        errorBanner.textContent = 'Please list at least ' + MIN_ROWS + ' manual tasks that eat your time.';
+        errorBanner.style.display = 'block';
+        return;
+      }
+      if (wishes.length < MIN_ROWS) {
+        errorBanner.textContent = 'Please list at least ' + MIN_ROWS + ' tools you wish existed.';
+        errorBanner.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      const payload = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        biggest_pain: pains,
+        wishlist_tool: wishes,
+        dietary_preferences: form.dietary_preferences.value.trim() || null
+      };
+
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            [AUTH_HEADER_NAME]: AUTH_HEADER_VALUE
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || 'Something went wrong. Please try again.');
+        }
+
+        form.style.display = 'none';
+        successMessage.style.display = 'block';
+      } catch (err) {
+        errorBanner.textContent = err.message;
+        errorBanner.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      }
+    });
+  </script>
+</body>
+</html>
