@@ -229,6 +229,91 @@
       font-size: 0.875rem;
       color: #c03030;
     }
+
+    /* Countdown timer */
+    .countdown-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: #2f4f4f;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px 8px 0 0;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .countdown-bar .countdown-label { opacity: 0.8; }
+
+    .countdown-bar .countdown-timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .countdown-bar.urgent {
+      background: #c03030;
+      animation: pulse-bg 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-bg {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    /* Urgency banner inside form */
+    .urgency-banner {
+      display: none;
+      background: #fff8e6;
+      border: 1px solid #ffe0a0;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      color: #7a6520;
+      text-align: center;
+    }
+
+    .urgency-banner.closing-soon {
+      background: #fff0f0;
+      border-color: #ffcccc;
+      color: #c03030;
+    }
+
+    /* Closed state */
+    .closed-message {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .closed-message .lock-icon {
+      width: 56px;
+      height: 56px;
+      background: #9a9a9a;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .closed-message h2 {
+      font-size: 1.25rem;
+      color: #2f4f4f;
+      margin-bottom: 0.5rem;
+    }
+
+    .closed-message p {
+      color: #7a7a7a;
+      line-height: 1.5;
+    }
+
+    .card.has-countdown {
+      border-radius: 0 0 12px 12px;
+    }
   </style>
 </head>
 <body>
@@ -259,7 +344,24 @@
     </svg>
   </div>
 
-  <div class="card">
+  <div class="countdown-bar" id="countdownBar" style="max-width:560px;width:100%;display:none;">
+    <span class="countdown-label">Survey closes in:</span>
+    <span class="countdown-timer" id="countdownTimer">--d --h --m --s</span>
+  </div>
+
+  <div class="card" id="mainCard">
+    <!-- Closed -->
+    <div class="closed-message" id="closedMessage">
+      <div class="lock-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h2>Submissions closed</h2>
+      <p>The survey for the March 6 roundtable has closed.<br>Thanks to everyone who submitted!</p>
+    </div>
+
     <!-- Form -->
     <form id="surveyForm">
       <h1>Before we sit down...</h1>
@@ -267,6 +369,7 @@
         Help us make the most of our time on March 6. This takes under 2 minutes.
       </p>
 
+      <div class="urgency-banner" id="urgencyBanner"></div>
       <div class="error-banner" id="errorBanner"></div>
 
       <label for="name">Your name</label>
@@ -349,6 +452,86 @@
     const AUTH_HEADER_NAME = 'X-Roundtable-Key';
     const AUTH_HEADER_VALUE = 'B6C4CFCD-8B25-493F-9D52-9041C3D33A77';
 
+    // SCHEDULED TASKS — deadline & countdown configuration
+    const EVENT_DATE = new Date('2026-03-06T09:00:00+01:00');        // Roundtable event
+    const SURVEY_DEADLINE = new Date('2026-03-05T23:59:59+01:00');   // Survey closes the night before
+
+    const countdownBar = document.getElementById('countdownBar');
+    const countdownTimer = document.getElementById('countdownTimer');
+    const urgencyBanner = document.getElementById('urgencyBanner');
+    const closedMessage = document.getElementById('closedMessage');
+    const mainCard = document.getElementById('mainCard');
+
+    function isSurveyClosed() {
+      return Date.now() >= SURVEY_DEADLINE.getTime();
+    }
+
+    function formatCountdown(ms) {
+      if (ms <= 0) return 'Closed';
+      const s = Math.floor(ms / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      const parts = [];
+      if (d > 0) parts.push(d + 'd');
+      parts.push(String(h).padStart(2, '0') + 'h');
+      parts.push(String(m).padStart(2, '0') + 'm');
+      parts.push(String(sec).padStart(2, '0') + 's');
+      return parts.join(' ');
+    }
+
+    function updateScheduledUI() {
+      const now = Date.now();
+      const remaining = SURVEY_DEADLINE.getTime() - now;
+
+      if (remaining <= 0) {
+        // Survey is closed
+        countdownBar.style.display = 'none';
+        document.getElementById('surveyForm').style.display = 'none';
+        closedMessage.style.display = 'block';
+        return false; // stop the interval
+      }
+
+      // Show countdown bar
+      countdownBar.style.display = 'flex';
+      mainCard.classList.add('has-countdown');
+      countdownTimer.textContent = formatCountdown(remaining);
+
+      const hoursLeft = remaining / (1000 * 60 * 60);
+
+      // Urgency styling on countdown bar
+      if (hoursLeft <= 6) {
+        countdownBar.classList.add('urgent');
+      } else {
+        countdownBar.classList.remove('urgent');
+      }
+
+      // Urgency banner inside the form
+      if (hoursLeft <= 2) {
+        urgencyBanner.textContent = 'Closing very soon — submit now to make sure your voice is heard!';
+        urgencyBanner.className = 'urgency-banner closing-soon';
+        urgencyBanner.style.display = 'block';
+      } else if (hoursLeft <= 24) {
+        urgencyBanner.textContent = 'Less than a day left — don\'t forget to submit your answers.';
+        urgencyBanner.className = 'urgency-banner';
+        urgencyBanner.style.display = 'block';
+      } else {
+        urgencyBanner.style.display = 'none';
+      }
+
+      return true; // keep running
+    }
+
+    // Run immediately, then every second
+    if (!updateScheduledUI()) {
+      // Already closed, nothing more to do
+    } else {
+      const countdownInterval = setInterval(() => {
+        if (!updateScheduledUI()) clearInterval(countdownInterval);
+      }, 1000);
+    }
+
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
     const errorBanner = document.getElementById('errorBanner');
@@ -417,6 +600,12 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorBanner.style.display = 'none';
+
+      // Double-check deadline at submission time
+      if (isSurveyClosed()) {
+        updateScheduledUI();
+        return;
+      }
 
       // Validate minimum 3 entries per group
       const pains = collectGroup('painGroup');
