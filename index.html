@@ -264,7 +264,7 @@
     <form id="surveyForm">
       <h1>Before we sit down...</h1>
       <p class="subtitle">
-        Help us make the most of our time on March 6. This takes under 2 minutes.
+        Help us make the most of our time on April 3. This takes under 2 minutes.
       </p>
 
       <div class="error-banner" id="errorBanner"></div>
@@ -278,21 +278,21 @@
       <div class="multi-group" id="painGroup">
         <label>
           What manual tasks eat the most of your time?
-          <span class="hint">Think about the work that feels like it should be automated by now — the copy-pasting, the cross-referencing, the formatting.</span>
+          <span class="hint">Think about the work that feels like it should be automated by now — the media monitoring, the reporting, the stakeholder tracking.</span>
         </label>
         <div class="input-row">
           <span class="row-num">1.</span>
-          <input type="text" name="biggest_pain[]" required placeholder="e.g. Reconciling voting lists against our MEP database">
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Monitoring media coverage across outlets for policy mentions">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <div class="input-row">
           <span class="row-num">2.</span>
-          <input type="text" name="biggest_pain[]" required placeholder="e.g. Cross-referencing amendment texts across trilogue rounds">
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Compiling weekly press clipping reports for leadership">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <div class="input-row">
           <span class="row-num">3.</span>
-          <input type="text" name="biggest_pain[]" required placeholder="e.g. Formatting briefing notes from committee transcripts">
+          <input type="text" name="biggest_pain[]" required placeholder="e.g. Tracking journalist and stakeholder social media activity">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <button type="button" class="add-row-btn" data-group="painGroup">+ Add another</button>
@@ -305,24 +305,27 @@
         </label>
         <div class="input-row">
           <span class="row-num">1.</span>
-          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Highlight exactly what changed between trilogue rounds">
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Auto-generate press briefings from committee meeting summaries">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <div class="input-row">
           <span class="row-num">2.</span>
-          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Auto-generate MEP scorecards from voting records">
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Real-time alerts when your policy topics trend in media">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <div class="input-row">
           <span class="row-num">3.</span>
-          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Real-time alerts when specific amendments are tabled">
+          <input type="text" name="wishlist_tool[]" required placeholder="e.g. Dashboard showing which journalists cover your issues most">
           <button type="button" class="remove-row" title="Remove" aria-label="Remove">&times;</button>
         </div>
         <button type="button" class="add-row-btn" data-group="wishlistGroup">+ Add another</button>
       </div>
 
-      <label for="dietary">Dietary preferences or restrictions <span class="optional">(optional)</span></label>
-      <input type="text" id="dietary" name="dietary_preferences" placeholder="e.g. vegetarian, no shellfish">
+      <label for="dietary">
+        Lunch order
+        <span class="hint">Please visit <a href="https://timetoeat-brussels.be" target="_blank" rel="noopener" style="color:#2f4f4f;font-weight:500;">timetoeat-brussels.be</a>, pick what you'd like, and enter your choice below.</span>
+      </label>
+      <input type="text" id="dietary" name="dietary_preferences" placeholder="e.g. Chicken Caesar wrap">
 
       <button type="submit" id="submitBtn">Submit</button>
 
@@ -339,7 +342,7 @@
         </svg>
       </div>
       <h2>Thank you!</h2>
-      <p>We've got your answers. See you on March 6.</p>
+      <p>We've got your answers. See you on April 3.</p>
     </div>
   </div>
 
